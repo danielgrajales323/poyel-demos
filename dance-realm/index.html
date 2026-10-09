@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Athenea para Dance Realm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: two-panel stage — the family's WhatsApp on the left, Luis's live panel on the right; stacks on phones. */
+:root{
+  --bg:#F5F1F0; --surface:#FFFFFF; --surface-2:#F8F4F3; --ink:#221A21; --ink-2:#5B4F58; --ink-3:#8A7D86; --line:#E4DADB;
+  --accent:#A8204F; --accent-ink:#FFFFFF; --accent-soft:#F7E3EA; --gold:#8C6418; --gold-soft:#F5EAD3;
+  --chat-bg:#EDE6E2; --bubble-in:#FFFFFF; --bubble-out:#E5F3E3; --chat-head:#3B1830;
+  --ok:#1F7A4D; --ok-soft:#DDF1E5; --warn:#8A5A00; --warn-soft:#FBEFCF; --bad:#A6352A; --bad-soft:#F7E0DC; --info:#2E5A8A; --info-soft:#E1EAF5;
+  --shadow:0 1px 2px rgba(40,20,35,.06),0 10px 28px rgba(40,20,35,.08);
+  --f-display:"Bricolage Grotesque",Georgia,"Times New Roman",serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141015; --surface:#1D171E; --surface-2:#251E26; --ink:#F1E9EE; --ink-2:#C2B4BD; --ink-3:#8F818B; --line:#3A2F39;
+  --accent:#EC6E98; --accent-ink:#2A0A17; --accent-soft:#3D1C29; --gold:#E2B862; --gold-soft:#3A2E17;
+  --chat-bg:#100C11; --bubble-in:#241D25; --bubble-out:#1D3A2A; --chat-head:#2A1222;
+  --ok:#6BD39E; --ok-soft:#173627; --warn:#F0C66B; --warn-soft:#3A2F14; --bad:#F09184; --bad-soft:#3E1E1A; --info:#8DB6E8; --info-soft:#1A2A3D;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.4); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141015; --surface:#1D171E; --surface-2:#251E26; --ink:#F1E9EE; --ink-2:#C2B4BD; --ink-3:#8F818B; --line:#3A2F39;
+  --accent:#EC6E98; --accent-ink:#2A0A17; --accent-soft:#3D1C29; --gold:#E2B862; --gold-soft:#3A2E17;
+  --chat-bg:#100C11; --bubble-in:#241D25; --bubble-out:#1D3A2A; --chat-head:#2A1222;
+  --ok:#6BD39E; --ok-soft:#173627; --warn:#F0C66B; --warn-soft:#3A2F14; --bad:#F09184; --bad-soft:#3E1E1A; --info:#8DB6E8; --info-soft:#1A2A3D;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.4); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;padding-inline:16px;padding-block:22px 40px}
+.wrap{max-width:1220px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px 28px}
+.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:clamp(28px,4.4vw,42px);line-height:1.04;font-weight:700;margin:4px 0 8px;letter-spacing:-.01em}
+.sub{color:var(--ink-2);max-width:62ch;margin:0}
+.scen{display:flex;flex-direction:column;gap:8px;max-width:560px}
+.scen-label{font-size:12px;color:var(--ink-3);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.scen-row{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:13.5px;font-weight:600}
+.chip small{font-weight:400;color:var(--ink-3)}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip[aria-pressed="true"] small{color:inherit;opacity:.8}
+
+.stage{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:20px;align-items:start}
+@media (max-width:900px){.stage{grid-template-columns:1fr}}
+
+/* phone */
+.phone{background:var(--chat-bg);border-radius:30px;border:8px solid var(--ink);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;height:700px;max-height:calc(100vh - 40px);min-height:540px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+@media (max-width:900px){.phone{position:relative;top:0;height:620px;max-width:420px;width:100%;margin:0 auto}}
+.chat-head{background:var(--chat-head);color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.avatar{width:38px;height:38px;border-radius:50%;background:#F2C6D4;color:#3B1830;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:15px;flex:none}
+.chat-head b{display:block;font-size:15px}
+.chat-head span{font-size:12px;opacity:.8}
+.msgs{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:6px}
+.day{align-self:center;font-size:11px;background:var(--surface);color:var(--ink-2);padding:3px 10px;border-radius:8px;margin-bottom:6px}
+.b{max-width:84%;padding:7px 10px 5px;border-radius:10px;font-size:14.3px;line-height:1.42;box-shadow:0 1px 1px rgba(0,0,0,.06);white-space:pre-line;animation:pop .18s ease-out;color:var(--ink)}
+.b.in{align-self:flex-start;background:var(--bubble-in);border-top-left-radius:3px}
+.b.out{align-self:flex-end;background:var(--bubble-out);border-top-right-radius:3px}
+.b.sys{align-self:center;background:var(--warn-soft);color:var(--warn);font-size:12.5px;text-align:center;max-width:92%;white-space:normal}
+.b time{display:block;text-align:right;font-size:10.5px;color:var(--ink-3);margin-top:2px}
+.prod{display:flex;flex-direction:column;gap:6px;margin-top:6px;white-space:normal}
+.pc{display:grid;grid-template-columns:46px 1fr;gap:9px;align-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:7px}
+.sw{width:46px;height:46px;border-radius:7px}
+.pc b{display:block;font-size:13.5px}
+.pc span{font-size:12px;color:var(--ink-2)}
+.pc .buy{grid-column:1/-1;text-align:center;font-size:12.5px;font-weight:700;color:var(--accent);border-top:1px solid var(--line);padding-top:5px}
+.typing{align-self:flex-start;background:var(--bubble-in);border-radius:10px;padding:10px 12px;display:flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--ink-3);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+@keyframes pop{from{transform:translateY(4px);opacity:.5}to{transform:none;opacity:1}}
+.replies{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px 4px;background:var(--chat-bg)}
+.reply{background:var(--surface);border:1px solid var(--line);color:var(--accent);border-radius:16px;padding:6px 11px;font-size:13px;font-weight:700}
+.reply:hover{border-color:var(--accent)}
+.composer{display:flex;gap:8px;padding:6px 10px 10px;background:var(--chat-bg);align-items:center}
+.composer input{flex:1;min-width:0;border:none;border-radius:20px;padding:10px 14px;background:var(--surface);color:var(--ink);font:inherit;font-size:14.5px}
+.send{width:40px;height:40px;border-radius:50%;border:none;background:var(--accent);flex:none;display:grid;place-items:center}
+.send::after{content:"";border-left:12px solid var(--accent-ink);border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:3px}
+
+/* panel */
+.panel{display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.panel-head h2{font-size:22px;margin:0;font-weight:700}
+.panel-head p{margin:0;font-size:13px;color:var(--ink-3)}
+.switch{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.toggle{width:44px;height:24px;border-radius:12px;border:none;background:var(--ok);position:relative;flex:none;transition:background .2s}
+.toggle::after{content:"";position:absolute;top:3px;left:23px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle[aria-checked="false"]{background:var(--ink-3)}
+.toggle[aria-checked="false"]::after{left:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:border-color .3s}
+.kpi .k{font-size:12px;color:var(--ink-3);font-weight:600}
+.kpi .v{font-family:var(--f-display);font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:2px}
+.kpi .s{font-size:12px;color:var(--ink-2)}
+.kpi.flash{border-color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.card h3{font-family:var(--f-body);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin:0 0 12px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.who{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.who-name{font-family:var(--f-display);font-size:21px;font-weight:700;line-height:1.2}
+.who-meta{font-size:13px;color:var(--ink-3)}
+.tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 11px;font-size:12px;font-weight:700;letter-spacing:.03em;white-space:nowrap}
+.tag::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.t-wait{background:var(--surface-2);color:var(--ink-3)}
+.t-new{background:var(--info-soft);color:var(--info)}
+.t-fam{background:var(--ok-soft);color:var(--ok)}
+.t-shop{background:var(--gold-soft);color:var(--gold)}
+.t-pay{background:var(--warn-soft);color:var(--warn)}
+.t-luis{background:var(--accent-soft);color:var(--accent)}
+.t-bad{background:var(--bad-soft);color:var(--bad)}
+.acts{list-style:none;margin:0;padding:0}
+.acts li{display:grid;grid-template-columns:18px 1fr;gap:8px;padding:7px 0;border-top:1px solid var(--line);font-size:14px;animation:pop .25s ease-out}
+.acts li:first-child{border-top:none}
+.acts li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent);margin-top:6px}
+.empty{color:var(--ink-3);font-size:14px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:-4px 0 12px}
+.tab{background:none;border:none;border-bottom:2px solid transparent;padding:8px 12px;font-weight:700;font-size:14px;color:var(--ink-3)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.row:first-child{border-top:none}
+.row b{font-weight:600}
+.row .muted{font-size:12.5px;color:var(--ink-3)}
+.amt{font-variant-numeric:tabular-nums;font-weight:700}
+.mini{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:4px 9px;font-size:12.5px;font-weight:700}
+.mini:hover{border-color:var(--accent)}
+.row.hl{background:var(--accent-soft);border-radius:8px;padding-inline:8px}
+@media (max-width:520px){.row{grid-template-columns:1fr auto}.row>span:last-child{grid-column:1/-1;justify-content:flex-start!important}}
+.grp{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.grp:first-child{border-top:none}
+.bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--accent)}
+.pipe{display:grid;grid-template-columns:repeat(3,minmax(160px,1fr));gap:10px;overflow-x:auto}
+.col{background:var(--surface-2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;min-width:160px}
+.col-h{font-size:12.5px;font-weight:700;color:var(--ink-2);display:flex;justify-content:space-between}
+.lc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:13px}
+.lc b{display:block;font-weight:600}
+.lc span{font-size:11.5px;color:var(--ink-3)}
+.lc.new{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.item{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:4px}
+.item .sw{width:100%;height:58px}
+.item b{font-size:14px}
+.item span{font-size:12.5px;color:var(--ink-2)}
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.why{grid-template-columns:1fr}}
+.why h3{font-family:var(--f-display);font-size:18px;margin:0 0 6px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:700;display:block}
+.why p{margin:0;color:var(--ink-2);font-size:14px}
+.foot{font-size:12.5px;color:var(--ink-3);text-align:center;margin:0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Demo en vivo · preparada para Dance Realm</div>
+      <h1>Athenea atiende. Tú enseñas.</h1>
+      <p class="sub">A la izquierda, lo que ve una familia en WhatsApp. A la derecha, tu panel en el mismo segundo. Elige un ejemplo o escribe tú como si fueras un padre de familia.</p>
+    </div>
+    <div class="scen">
+      <span class="scen-label">Probar como</span>
+      <div class="scen-row" id="scenarios"></div>
+    </div>
+  </header>
+
+  <section class="stage">
+    <div class="phone" aria-label="Conversación de WhatsApp simulada">
+      <div class="chat-head">
+        <div class="avatar" aria-hidden="true">DR</div>
+        <div><b>Dance Realm</b><span id="status">en línea · Athenea</span></div>
+      </div>
+      <div class="msgs" id="msgs" role="log" aria-live="polite"></div>
+      <div class="replies" id="replies"></div>
+      <form class="composer" id="composer">
+        <input id="chatInput" type="text" autocomplete="off" placeholder="Escribe un mensaje" aria-label="Escribe un mensaje">
+        <button class="send" type="submit" aria-label="Enviar"></button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>Panel de Luis</h2><p>Dance Realm · hoy</p></div>
+        <span class="switch"><span id="killLabel">Athenea activa</span><button class="toggle" id="kill" type="button" role="switch" aria-checked="true" aria-label="Athenea activa"></button></span>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi" id="k-due"><div class="k">Pagos pendientes hoy</div><div class="v" id="v-due">0</div><div class="s" id="s-due">$0</div></div>
+        <div class="kpi" id="k-new"><div class="k">Interesados nuevos</div><div class="v" id="v-new">0</div><div class="s">esta semana</div></div>
+        <div class="kpi" id="k-docs"><div class="k">Documentos por firmar</div><div class="v" id="v-docs">0</div><div class="s">familias</div></div>
+        <div class="kpi" id="k-shop"><div class="k">Ventas de la tienda</div><div class="v" id="v-shop">$0</div><div class="s">este mes</div></div>
+      </div>
+
+      <div class="card">
+        <h3><span>Conversación en curso</span><span id="convCount" style="text-transform:none;letter-spacing:0;font-weight:600"></span></h3>
+        <div class="who">
+          <div><div class="who-name" id="whoName">Esperando mensaje…</div><div class="who-meta" id="whoMeta">WhatsApp</div></div>
+          <span class="tag t-wait" id="whoTag">Sin clasificar</span>
+        </div>
+        <ul class="acts" id="acts"><li class="empty" style="display:block;border:none">Aquí ves lo que Athenea hace por ti en cada conversación.</li></ul>
+      </div>
+
+      <div class="card">
+        <div class="tabs" role="tablist" id="tabs">
+          <button class="tab" role="tab" id="tab-pagos" aria-selected="true" data-t="pagos">Pagos</button>
+          <button class="tab" role="tab" id="tab-grupos" aria-selected="false" data-t="grupos">Grupos</button>
+          <button class="tab" role="tab" id="tab-interesados" aria-selected="false" data-t="interesados">Interesados</button>
+          <button class="tab" role="tab" id="tab-tienda" aria-selected="false" data-t="tienda">Tienda</button>
+        </div>
+        <div id="tabBody"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="why">
+    <div class="card"><h3>Escribe como tú</h3><p>Athenea aprende de tus chats reales cómo saludas y cómo explicas, y responde con tu tono y tu voz, con tus horarios, precios y reglas. Tú apruebas sus respuestas antes de activarla. Si no sabe algo, te pasa la conversación.</p></div>
+    <div class="card"><h3>Todo queda en tu panel</h3><p>Interesados, inscripciones, firmas, pagos y ventas se registran solos. Desde el celular ves quién debe, quién es nuevo y qué falta por firmar.</p></div>
+    <div class="card"><h3>Tú tienes el control</h3><p>Con un botón pausas a Athenea y todos los mensajes llegan a ti. Las familias también pueden pedir hablar con el profe en cualquier momento.</p></div>
+  </section>
+
+  <p class="foot">Demo preparada por Daniel Grajales · POYEL Studio. Los nombres, horarios, precios y productos son de ejemplo.</p>
+</div>
+
+<script>
+(function(){
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const T = reduce ? 0.2 : 1;
+  const $ = id => document.getElementById(id);
+  const sleep = ms => new Promise(r=>setTimeout(r, ms*T));
+  const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const money = n => '$'+n.toLocaleString('en-US');
+
+  /* ---------- Example school data ---------- */
+  const GROUPS = [
+    {name:'Semillitas · 4 a 6 años', when:'Sábados 10:00 am', n:12, cap:15},
+    {name:'Niñas · 7 a 10 años', when:'Martes y jueves 5:00 pm', n:15, cap:15},
+    {name:'Juvenil · 11 a 15 años', when:'Martes y jueves 6:15 pm', n:13, cap:15},
+    {name:'Juvenil avanzado', when:'Sábados 11:30 am', n:9, cap:12},
+    {name:'Adultos · salsa', when:'Miércoles 7:30 pm', n:11, cap:16}
+  ];
+  const PRODUCTS = [
+    {id:'vestido', name:'Vestido de salsa · niñas', price:65, sw:'linear-gradient(135deg,#C2185B,#7B1E4F)', note:'Tallas 6 a 14'},
+    {id:'falda', name:'Falda de flamenco', price:45, sw:'repeating-linear-gradient(45deg,#1F1A1C 0 8px,#B32437 8px 16px)', note:'Tallas S a L'},
+    {id:'camiseta', name:'Camiseta Dance Realm', price:20, sw:'linear-gradient(135deg,#221A21,#5B4F58)', note:'Uniforme de clase'},
+    {id:'zapatos', name:'Zapatos de salsa (recomendados)', price:null, sw:'linear-gradient(135deg,#C9A15A,#8C6418)', note:'Link con comisión para la escuela'}
+  ];
+  let state;
+  function freshState(){
+    return {
+      payments:[
+        {fam:'Familia Ramírez', kid:'Sofía · Niñas', amt:110, st:'hoy'},
+        {fam:'Familia Gómez', kid:'Valentina y Sara · Niñas', amt:198, st:'hoy'},
+        {fam:'Familia Torres', kid:'Mateo · Juvenil', amt:110, st:'atrasado'},
+        {fam:'Familia Herrera', kid:'Isabella · Semillitas', amt:110, st:'pagado'},
+        {fam:'Familia Castillo', kid:'Daniela · Juvenil avanzado', amt:110, st:'efectivo'}
+      ],
+      leads:{nuevo:[['Paola M.','Adultos · salsa']], link:[['Familia Rojas','Semillitas']], inscrito:[['Familia Pérez','Niñas · firmó todo']]},
+      newCount:3, docs:4, shop:130, hlPay:null, newLead:null
+    };
+  }
+
+  /* ---------- Pre-approved replies ---------- */
+  const R = {
+    greet:'Hola, bienvenido a Dance Realm 👋 ¿En qué te ayudo?',
+    horario:'Claro, estos son los horarios:\nSemillitas (4-6 años): sáb 10am\nNiñas (7-10): mar y jue 5pm\nJuvenil (11-15): mar y jue 6:15pm\nAvanzado: sáb 11:30am\nAdultos salsa: mié 7:30pm',
+    precio:'Son $110 al mes por alumno, con 2 clases por semana. Para hermanos hay 10% de descuento y la primera clase es gratis.',
+    ritmos:'Salsa, cha-cha-chá, bachata, tango y flamenco. Depende del nivel de cada grupo.',
+    inscribir:'Listo, las puedes inscribir aquí: dancerealm.com/inscripcion\nSon unos 3 minutos. Ahí mismo firmas los permisos y haces el pago.',
+    edad:'Para esas edades es el grupo de Niñas, martes y jueves a las 5pm. Todavía hay cupo.',
+    uniforme:'Para clase es la camiseta de Dance Realm con licra negra. Para la presentación es el vestido, te dejo las opciones:',
+    zapatos:'Estos son los que usamos, tacón bajo y suela de gamuza:',
+    debo:'Te queda pendiente octubre, $110. Vence hoy.\nPuedes pagar aquí: dancerealm.com/pagar\nO en efectivo con el profe en clase.',
+    pagado:'Recibido, gracias 🙌 El recibo te llega al correo.',
+    clase:'Sí, mañana hay clase normal. Es en el salón de siempre, 125 Broadway, Chelsea. Lleguen 10 min antes.',
+    show:'Qué bien, gracias por escribir. Los shows los coordina el profe Luis directamente. Ya le pasé tus datos y te escribe hoy.',
+    humano:'Claro, ya le aviso al profe. Te escribe apenas salga de clase.',
+    gracias:'Con gusto 😊',
+    noentiendo:'Perdona, no te entendí bien. ¿Me lo explicas de otra forma o te paso con el profe?',
+    paused:'Gracias por tu mensaje. El profe Luis te responde en un momento.'
+  };
+
+  /* ---------- Deterministic intent detection ---------- */
+  function intent(text){
+    const t = text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+    if (/(ya pague|listo,? pague|pague ya)/.test(t)) return 'pagado';
+    if (/(anos|edad)/.test(t) && /(nina|hija|hijo|nino)/.test(t)) return 'edad';
+    if (/(inscrib|matricul|meter a|quiero empezar|apuntar)/.test(t)) return 'inscribir';
+    if (/(zapato|tacon)/.test(t)) return 'zapatos';
+    if (/(uniforme|vestido|falda|camiseta|ropa|tienda)/.test(t)) return 'uniforme';
+    if (/(show|evento|empresa|contratar|fiesta)/.test(t)) return 'show';
+    if (/(debo|deuda|pagar|pago|mensualidad pendiente)/.test(t)) return 'debo';
+    if (/(hablar con|una persona|con el profe|con luis)/.test(t)) return 'humano';
+    if (/(manana|hoy hay|hay clase|donde|direccion|ubicacion|salon)/.test(t)) return 'clase';
+    if (/(precio|cuesta|valor|cobran|cuanto)/.test(t)) return 'precio';
+    if (/(horario|hora|dias|que dia|cuando)/.test(t)) return 'horario';
+    if (/(ritmo|salsa|bachata|tango|flamenco|que ensen)/.test(t)) return 'ritmos';
+    if (/(gracias|perfecto|listo|ok)/.test(t)) return 'gracias';
+    if (/(hola|buenas|buenos)/.test(t)) return 'hola';
+    return null;
+  }
+
+  /* ---------- Scenarios ---------- */
+  const SCEN = [
+    {id:'mama', label:'Mamá nueva', hint:'inscribir 2 niñas', who:'Carolina Méndez', meta:'Número nuevo · llegó por Instagram',
+      msgs:['Hola buenas tardes','Quiero meter a mis 2 niñas, tienen 8 y 9 años','Y cuánto es?','Ok perfecto, cómo las inscribo?']},
+    {id:'papa', label:'Papá actual', hint:'uniforme y zapatos', who:'Andrés Gómez', meta:'Familia Gómez · Valentina y Sara',
+      msgs:['Profe cuál es el vestido para la presentación?','Y los zapatos?','Listo gracias']},
+    {id:'pago', label:'Familia', hint:'¿cuánto debo?', who:'Lucía Ramírez', meta:'Familia Ramírez · Sofía',
+      msgs:['Hola, cuánto debo este mes?','Listo ya pagué']},
+    {id:'clase', label:'Mamá', hint:'¿hay clase mañana?', who:'Diana Torres', meta:'Familia Torres · Mateo',
+      msgs:['Mañana hay clase? Dónde es?']},
+    {id:'show', label:'Empresa', hint:'contratar un show', who:'Marcela Ruiz', meta:'Número nuevo · organizadora de eventos',
+      msgs:['Hola, quería saber si hacen shows. Es para una fiesta de la empresa en diciembre']},
+    {id:'libre', label:'Escribir yo', hint:'modo libre', who:'Tú', meta:'Prueba libre', msgs:[]}
+  ];
+  const QUICK = [['Horarios','¿Cuáles son los horarios?'],['Precios','¿Cuánto cuesta?'],['Inscribirme','Quiero inscribir a mi hija'],['Uniforme y vestidos','¿Cuál es el uniforme?'],['Zapatos','¿Qué zapatos necesita?'],['¿Cuánto debo?','¿Cuánto debo este mes?'],['Hablar con el profe','Quiero hablar con el profe']];
+
+  /* ---------- Chat rendering ---------- */
+  const msgs=$('msgs'), input=$('chatInput');
+  let run=0, paused=false, active='mama', cur;
+  const now = () => new Date().toLocaleTimeString('es-US',{hour:'numeric',minute:'2-digit'});
+  function scroll(){ msgs.scrollTop = msgs.scrollHeight; }
+  function bubble(side, text, extraHTML){
+    const b=document.createElement('div'); b.className='b '+side;
+    b.textContent=text;
+    if (extraHTML){ const d=document.createElement('div'); d.className='prod'; d.innerHTML=extraHTML; b.appendChild(d); }
+    const t=document.createElement('time'); t.textContent=now(); b.appendChild(t);
+    msgs.appendChild(b); scroll();
+  }
+  function sys(text){ const b=document.createElement('div'); b.className='b sys'; b.textContent=text; msgs.appendChild(b); scroll(); }
+  async function botSay(text, myRun, extraHTML){
+    const ty=document.createElement('div'); ty.className='typing'; ty.innerHTML='<i></i><i></i><i></i>'; msgs.appendChild(ty); scroll();
+    await sleep(Math.min(1300, 450 + text.length*4));
+    ty.remove(); if (myRun!==run) return false;
+    bubble('in', text, extraHTML); return true;
+  }
+  function prodCards(ids){
+    return ids.map(id=>{const p=PRODUCTS.find(x=>x.id===id);
+      return `<div class="pc"><span class="sw" style="background:${p.sw}" aria-hidden="true"></span><div><b>${esc(p.name)}</b><span>${p.price?money(p.price)+' · ':''}${esc(p.note)}</span></div><span class="buy">${p.price?'Comprar en la tienda':'Ver en la tienda'}</span></div>`;}).join('');
+  }
+  function setReplies(on){
+    const box=$('replies'); box.innerHTML='';
+    if(!on) return;
+    QUICK.forEach(([l,msg])=>{const b=document.createElement('button');b.type='button';b.className='reply';b.textContent=l;b.addEventListener('click',()=>{switchToFree();userSays(msg);});box.appendChild(b);});
+  }
+
+  /* ---------- Panel ---------- */
+  const TAGS={wait:['t-wait','Sin clasificar'],nuevo:['t-new','Interesado nuevo'],familia:['t-fam','Familia actual'],tienda:['t-shop','Compra · tienda'],pago:['t-pay','Pago'],luis:['t-luis','Para Luis']};
+  function setTag(k){ const [c,l]=TAGS[k]; const el=$('whoTag'); el.className='tag '+c; el.textContent=l; }
+  function act(text){
+    const ul=$('acts'); const e=ul.querySelector('.empty'); if(e) e.remove();
+    const li=document.createElement('li'); li.innerHTML='<span></span><div>'+text+'</div>'; li.firstChild.remove(); ul.appendChild(li);
+  }
+  function flash(id){ const el=$(id); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),1600); }
+  function renderKPIs(){
+    const due=state.payments.filter(p=>p.st==='hoy'||p.st==='atrasado');
+    $('v-due').textContent=due.length; $('s-due').textContent=money(due.reduce((a,p)=>a+p.amt,0))+' por cobrar';
+    $('v-new').textContent=state.newCount; $('v-docs').textContent=state.docs; $('v-shop').textContent=money(state.shop);
+  }
+  let tab='pagos';
+  const ST={hoy:['t-pay','Vence hoy'],atrasado:['t-bad','Atrasado'],pagado:['t-fam','Pagado'],efectivo:['t-fam','Efectivo']};
+  function renderTab(){
+    const body=$('tabBody');
+    if(tab==='pagos'){
+      body.innerHTML='<div class="rows">'+state.payments.map((p,i)=>`<div class="row${state.hlPay===i?' hl':''}"><div><b>${esc(p.fam)}</b><div class="muted">${esc(p.kid)}</div></div><span class="amt">${money(p.amt)}</span><span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><span class="tag ${ST[p.st][0]}">${ST[p.st][1]}</span>${(p.st==='hoy'||p.st==='atrasado')?`<button class="mini" data-cash="${i}" type="button">Registrar efectivo</button>`:''}</span></div>`).join('')+'</div>';
+      body.querySelectorAll('[data-cash]').forEach(b=>b.addEventListener('click',()=>{const p=state.payments[+b.dataset.cash];p.st='efectivo';renderKPIs();renderTab();flash('k-due');}));
+    } else if(tab==='grupos'){
+      body.innerHTML='<div>'+GROUPS.map(g=>`<div class="grp"><div style="min-width:0"><b>${esc(g.name)}</b><div class="muted" style="font-size:12.5px;color:var(--ink-3)">${esc(g.when)}</div></div><div class="bar" aria-hidden="true"><i style="width:${Math.round(g.n/g.cap*100)}%"></i></div><span class="amt" style="font-size:13px">${g.n}/${g.cap}${g.n>=g.cap?' · lleno':''}</span></div>`).join('')+'</div><p class="muted" style="font-size:12.5px;color:var(--ink-3);margin:10px 0 0">60 alumnos activos en 5 grupos.</p>';
+    } else if(tab==='interesados'){
+      const col=(k,label)=>{const items=state.leads[k];return `<div class="col"><div class="col-h"><span>${label}</span><span>${items.length}</span></div>${items.map(([n,d],i)=>`<div class="lc${state.newLead&&state.newLead[0]===k&&i===items.length-1?' new':''}"><b>${esc(n)}</b><span>${esc(d)}</span></div>`).join('')}</div>`;};
+      body.innerHTML='<div class="pipe">'+col('nuevo','Escribió')+col('link','Link enviado')+col('inscrito','Inscrito')+'</div>';
+    } else {
+      body.innerHTML='<div class="shop">'+PRODUCTS.map(p=>`<div class="item"><span class="sw" style="background:${p.sw}" aria-hidden="true"></span><b>${esc(p.name)}</b><span>${p.price?money(p.price):'Comisión por cada compra'}</span><span>${esc(p.note)}</span></div>`).join('')+'</div>';
+    }
+  }
+  function showTab(t){ tab=t; document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.t===t)); renderTab(); }
+  document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.t)));
+
+  /* ---------- Handle a family message ---------- */
+  async function respond(it, myRun){
+    const c=cur;
+    switch(it){
+      case 'hola': if(!(await botSay(R.greet,myRun))) return; setReplies(true); break;
+      case 'horario': if(!(await botSay(R.horario,myRun))) return; act('Respondió los horarios de los 5 grupos'); break;
+      case 'precio': if(!(await botSay(R.precio,myRun))) return; act('Explicó la mensualidad, el descuento de hermanos y la clase de prueba'); break;
+      case 'ritmos': if(!(await botSay(R.ritmos,myRun))) return; act('Explicó los ritmos que enseña la escuela'); break;
+      case 'edad': if(!(await botSay(R.edad,myRun))) return;
+        setTag('nuevo'); act('Clasificó como <b>interesado nuevo</b> · Grupo Niñas (7 a 10 años)');
+        if(!c.lead){ c.lead=true; state.leads.nuevo.push([c.who,'2 niñas · Grupo Niñas']); state.newLead=['nuevo']; state.newCount++; renderKPIs(); flash('k-new'); showTab('interesados'); }
+        break;
+      case 'inscribir': if(!(await botSay(R.inscribir,myRun))) return;
+        setTag('nuevo'); act('Envió el link de inscripción, firmas y pago');
+        if(c.lead){ state.leads.nuevo.pop(); }
+        state.leads.link.push([c.who, c.lead?'2 niñas · link enviado':'Link enviado']);
+        if(!c.lead){ state.newCount++; c.lead=true; }
+        state.newLead=['link']; state.docs+= 1; renderKPIs(); flash('k-docs'); showTab('interesados');
+        act('Agregó la familia a <b>Interesados</b> y a <b>Documentos por firmar</b>');
+        break;
+      case 'uniforme': if(!(await botSay(R.uniforme,myRun,prodCards(['camiseta','vestido','falda'])))) return;
+        setTag('tienda'); act('Mostró el uniforme y los vestidos de la tienda');
+        await sleep(1400); if(myRun!==run) return;
+        state.shop+=65; renderKPIs(); flash('k-shop'); showTab('tienda');
+        act('Venta en la tienda: <b>Vestido de salsa · $65</b>, pagado en línea');
+        break;
+      case 'zapatos': if(!(await botSay(R.zapatos,myRun,prodCards(['zapatos'])))) return;
+        setTag('tienda'); act('Envió los zapatos recomendados con tu link de comisión'); break;
+      case 'debo': {
+        const i=state.payments.findIndex(p=>p.fam==='Familia Ramírez');
+        if(!(await botSay(R.debo,myRun))) return;
+        setTag('pago'); state.hlPay=i; showTab('pagos'); act('Consultó el saldo de la Familia Ramírez · $110 vence hoy'); act('Envió el link de pago');
+        break; }
+      case 'pagado': {
+        const i=state.payments.findIndex(p=>p.fam==='Familia Ramírez');
+        if(!(await botSay(R.pagado,myRun))) return;
+        if(state.payments[i].st!=='pagado'){ state.payments[i].st='pagado'; state.hlPay=i; renderKPIs(); flash('k-due'); showTab('pagos'); }
+        act('Pago confirmado y recibo enviado · Familia Ramírez marcada <b>Pagado</b>');
+        break; }
+      case 'clase': if(!(await botSay(R.clase,myRun))) return; setTag('familia'); act('Confirmó la clase de mañana y la ubicación'); break;
+      case 'show': if(!(await botSay(R.show,myRun))) return; setTag('luis'); act('Detectó una solicitud de <b>show para empresa</b>'); act('Te avisó por WhatsApp con los datos de contacto'); break;
+      case 'humano': if(!(await botSay(R.humano,myRun))) return; setTag('luis'); act('Te pasó la conversación con un resumen'); break;
+      case 'gracias': if(!(await botSay(R.gracias,myRun))) return; break;
+      default: if(!(await botSay(R.noentiendo,myRun))) return; setReplies(true);
+    }
+  }
+  async function userSays(text){
+    const myRun=run; bubble('out', text);
+    if (paused){ await sleep(500); if(myRun!==run) return; sys('Athenea está en pausa · el mensaje le llegó a Luis'); return; }
+    let it=intent(text);
+    if (it==='hola' && cur.greeted) it='gracias';
+    if (!cur.greeted && it!=='hola'){ cur.greeted=true; }
+    if (it==='hola') cur.greeted=true;
+    if (cur.who!=='Tú' && !cur.familyTagged && ['familia'].includes(it)) cur.familyTagged=true;
+    await respond(it, myRun);
+    if (myRun===run && cur.scen && ['papa','pago','clase'].includes(cur.scen) && $('whoTag').classList.contains('t-wait')) setTag('familia');
+  }
+
+  async function play(myRun){
+    const sc=SCEN.find(s=>s.id===active);
+    for (const m of sc.msgs){
+      await sleep(900); if (myRun!==run || paused) return;
+      await userSays(m);
+      if (myRun!==run) return;
+    }
+    if (myRun===run) setReplies(true);
+  }
+
+  function start(){
+    run++; const myRun=run;
+    state=freshState();
+    const sc=SCEN.find(s=>s.id===active);
+    cur={who:sc.who, scen:sc.id, greeted:false, lead:false};
+    msgs.innerHTML='<div class="day">Hoy</div>'; setReplies(false);
+    $('whoName').textContent = sc.who==='Tú' ? 'Prueba libre' : sc.who;
+    $('whoMeta').textContent = sc.meta;
+    $('convCount').textContent = '';
+    setTag(['papa','pago','clase'].includes(sc.id)?'familia':'wait');
+    $('acts').innerHTML='<li class="empty" style="display:block;border:none">Aquí ves lo que Athenea hace por ti en cada conversación.</li>';
+    renderKPIs(); showTab('pagos');
+    if (active==='libre'){ botSay(R.greet,myRun).then(ok=>{ if(ok){cur.greeted=true; setReplies(true); input.focus({preventScroll:true});} }); }
+    else play(myRun);
+  }
+  function switchToFree(){
+    if (active!=='libre'){ active='libre'; document.querySelectorAll('#scenarios .chip').forEach(c=>c.setAttribute('aria-pressed', c.dataset.id==='libre')); run++; cur.scen='libre'; }
+  }
+
+  const row=$('scenarios');
+  SCEN.forEach(s=>{const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.id=s.id;b.innerHTML=`${esc(s.label)} <small>· ${esc(s.hint)}</small>`;b.setAttribute('aria-pressed', s.id===active);
+    b.addEventListener('click',()=>{active=s.id;row.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed', c.dataset.id===s.id));start();});row.appendChild(b);});
+  $('composer').addEventListener('submit',e=>{e.preventDefault();const v=input.value.trim();if(!v)return;input.value='';switchToFree();userSays(v);});
+  $('kill').addEventListener('click',()=>{
+    paused=!paused; $('kill').setAttribute('aria-checked', String(!paused));
+    $('killLabel').textContent = paused?'Athenea en pausa':'Athenea activa';
+    $('status').textContent = paused?'en línea · te responde el profe':'en línea · Athenea';
+    sys(paused?'Luis pausó a Athenea. Los mensajes nuevos le llegan a él.':'Athenea reactivada.');
+  });
+
+  start();
+})();
+</script>
+</html>
