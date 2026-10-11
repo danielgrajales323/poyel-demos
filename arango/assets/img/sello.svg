@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-labelledby="sello-t">
+  <title id="sello-t">Arango Legacy Advisors</title>
+  <defs>
+    <path id="sello-arc" d="M44.8 155.2 A78 78 0 1 1 155.2 155.2" fill="none"/>
+  </defs>
+  <circle cx="100" cy="100" r="100" fill="#5a974f"/>
+  <text font-family="'Instrument Sans', Arial, sans-serif" font-size="12.5" font-weight="600" letter-spacing="3.2" fill="#1f3d1a">
+    <textPath href="#sello-arc" startOffset="50%" text-anchor="middle">ARANGO LEGACY ADVISORS</textPath>
+  </text>
+  <g fill="none" stroke="#1f3d1a" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 158 C 72 130, 92 88, 110 52" stroke-width="15"/>
+    <path d="M110 52 C 118 76, 126 104, 134 130" stroke-width="13"/>
+    <path d="M80 121 C 100 116, 128 112, 156 110" stroke-width="12"/>
+  </g>
+</svg>
