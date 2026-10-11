@@ -1,30 +1,29 @@
-/* Arango Legacy Advisors — versión final (paleta papel, arena y el verde del sello; 2026-10-10)
-   Tokens en dos capas: rampa literal, luego alias semánticos. Una familia de easing, tres tiers. */
+
 :root{
-  /* rampa literal */
-  --c-ink:#2b1d13;        /* espresso, el más oscuro */
-  --c-forest:#24412c;     /* verde bosque del sello: fondos oscuros */
+  
+  --c-ink:#2b1d13;        
+  --c-forest:#24412c;     
   --c-forest-2:#2f5236;
-  --c-moss:#2f6a2b;       /* verde que aguanta como texto chico sobre papel y arena (>5:1) */
-  --c-seal:#5a974f;       /* el verde exacto del sello: rellenos, insignias */
-  --c-sage:#8fb57f;       /* verde claro: líneas tenues */
+  --c-moss:#2f6a2b;       
+  --c-seal:#5a974f;       
+  --c-sage:#8fb57f;       
   --c-leaf:#c9dcbf;
-  --c-mint:#e6efdf;       /* superficie verde pálido */
+  --c-mint:#e6efdf;       
   --c-mint-2:#f0f5ea;
-  --c-paper:#f4ecdf;      /* papel cálido: el ground nunca es blanco puro */
+  --c-paper:#f4ecdf;      
   --c-paper-2:#e9dcc6;
   --c-cream:#fbf6ee;
-  --c-gold:#c49a55;       /* legado; se usa poco: la línea y el botón principal */
+  --c-gold:#c49a55;       
   --c-gold-2:#d8b479;
   --c-gold-soft:#f1e1bd;
-  --c-sun:#f3e4c2;        /* arena luminosa */
+  --c-sun:#f3e4c2;        
   --c-brown:#3d2817;
-  --c-cinnamon:#a86a3d;   /* canela: acentos sobre papel */
+  --c-cinnamon:#a86a3d;   
   --c-white:#fff;
-  /* cuatro oscuros para el pie y las bandas */
+  
   --d0:#14241a; --d1:#1b3022; --d2:#223a2a; --d3:#2b4a33;
 
-  /* alias semánticos */
+  
   --bg:var(--c-paper);
   --bg-dark:var(--c-forest);
   --fg:var(--c-ink);
@@ -36,16 +35,16 @@
   --hairline:rgba(43,29,19,.14);
   --hairline-dark:rgba(240,245,234,.18);
 
-  /* easing: la familia expo-out; se declara el set, se usan dos */
+  
   --ease-out-expo:cubic-bezier(.16,1,.3,1);
   --ease-out-quint:cubic-bezier(.22,1,.36,1);
   --ease-in-out-quart:cubic-bezier(.76,0,.24,1);
   --t-micro:.3s; --t-move:.7s; --t-reveal:1.2s;
 
-  /* tipografía */
+  
   --f-display:"Fraunces","Georgia",serif;
   --f-body:"Instrument Sans","Segoe UI",system-ui,sans-serif;
-  --f-hand:"Fraunces","Georgia",serif;   /* antes Caveat; tercera familia marcada por la auditoría 2026-10-10 */
+  --f-hand:"Fraunces","Georgia",serif;   
 
   --radius:22px; --radius-sm:12px; --radius-pill:999px;
   --gutter:clamp(16px,4vw,56px);
@@ -83,7 +82,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .eyebrow--mint{color:var(--c-leaf)}
 em{font-style:italic;font-variation-settings:"opsz" 144,"SOFT" 100}
 
-/* ---------- botones (contraste medido: oro + tinta 6.1:1, tinta + menta 12:1) ---------- */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:15px 26px;border-radius:var(--radius-pill);
@@ -104,7 +102,6 @@ em{font-style:italic;font-variation-settings:"opsz" 144,"SOFT" 100}
 .btn--xl{padding:20px 32px;font-size:17px;width:100%}
 .btn--card{width:100%;margin-top:auto}
 
-/* ---------- nav píldora ---------- */
 .nav{position:fixed;inset:14px 0 auto;z-index:50;display:flex;justify-content:center;padding:0 var(--gutter);pointer-events:none}
 .nav__pill{
   pointer-events:auto;display:flex;align-items:center;gap:28px;
@@ -126,13 +123,11 @@ em{font-style:italic;font-variation-settings:"opsz" 144,"SOFT" 100}
 .nav__lang{font-size:13px;font-weight:600;letter-spacing:.08em;text-decoration:none;color:var(--c-moss);display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:0 12px;border-radius:var(--radius-pill);border:1px solid rgba(43,29,19,.18);margin-right:4px;transition:background-color var(--t-micro) var(--ease-out-quint)}
 .nav__lang:hover{background:var(--c-mint)}
 
-/* ---------- la línea (motivo) ---------- */
 .line{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .line__path{fill:none;stroke:var(--line);stroke-width:4;stroke-linecap:round;vector-effect:non-scaling-stroke}
 .line--faint .line__path{opacity:.35;stroke-width:3}
 .line--forest .line__path{stroke:var(--c-sage);opacity:.45}
 
-/* ---------- hero ---------- */
 .hero{position:relative;min-height:100svh;display:grid;grid-template-rows:1fr auto;isolation:isolate;overflow:hidden;background:var(--d1);color:var(--c-paper)}
 .hero__bg{position:absolute;inset:0;z-index:0}
 .hero__video{width:100%;height:100%;object-fit:cover;object-position:center 40%}
@@ -148,7 +143,6 @@ html[lang=en] .hero__title{font-size:clamp(38px,6.2vw,92px);max-width:14ch}
 .hero__bottom{position:relative;z-index:3;display:flex;gap:28px;flex-wrap:wrap;padding:0 var(--gutter) 28px;font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--c-gold-soft)}
 .hero__bottom span+span::before{content:"·";margin-right:28px;color:var(--c-gold)}
 
-/* ---------- aseguradoras ---------- */
 .carriers{padding:56px 0 48px;background:var(--c-paper);border-bottom:1px solid var(--hairline)}
 .carriers__title{text-align:center;font-family:var(--f-display);font-size:clamp(20px,2vw,28px);color:var(--c-forest);max-width:34ch;margin:0 auto 34px;text-wrap:balance}
 .marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
@@ -160,7 +154,6 @@ html[lang=en] .hero__title{font-size:clamp(38px,6.2vw,92px);max-width:14ch}
 .marquee--label .marquee__track span::after{content:"·";margin-left:52px;color:var(--c-gold)}
 @keyframes marquee{to{transform:translateX(-50%)}}
 
-/* ---------- declaración (fondo bosque) ---------- */
 .statement{position:relative;padding:120px 0 64px;background:var(--bg-dark);color:var(--fg-on-dark);overflow:hidden;isolation:isolate}
 .statement::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 80% 20%,rgba(196,154,85,.26),transparent 70%);pointer-events:none}
 .statement__line{z-index:0}
@@ -180,7 +173,6 @@ html[lang=en] .hero__title{font-size:clamp(38px,6.2vw,92px);max-width:14ch}
 .statement__label{position:relative;z-index:1;margin:80px 0 14px;text-align:center;font-family:var(--f-hand);font-size:clamp(22px,2.2vw,30px);color:var(--c-gold-2)}
 .statement .marquee{position:relative;z-index:1}
 
-/* ---------- aprende (pestañas) ---------- */
 .learn{position:relative;padding:120px 0 96px;background:var(--c-paper);overflow:hidden;isolation:isolate}
 .learn__line{z-index:0}
 .learn .container{position:relative;z-index:1}
@@ -202,7 +194,6 @@ html[lang=en] .hero__title{font-size:clamp(38px,6.2vw,92px);max-width:14ch}
 .facts__item h3{font-size:22px;color:var(--c-forest);margin-bottom:10px}
 .facts__item p{font-size:16.5px;color:var(--fg-muted)}
 
-/* ---------- servicios (tarjetas de color) ---------- */
 .services{padding:40px 0 120px;background:var(--c-paper)}
 .services__title{font-size:clamp(34px,4.6vw,68px);max-width:16ch;color:var(--c-forest);margin-bottom:48px;text-wrap:balance}
 .services__title em{color:var(--c-sage)}
@@ -220,7 +211,6 @@ html[lang=en] .hero__title{font-size:clamp(38px,6.2vw,92px);max-width:14ch}
 .card--paper{background:var(--c-cream);color:var(--c-ink);border:1px solid var(--hairline)}
 .card--paper .btn--card{background:var(--c-gold);color:var(--c-ink)}
 
-/* ---------- la pila de objeciones (pico) ---------- */
 .stack{position:relative;background:var(--d2);color:var(--fg-on-dark)}
 .stack__lead{padding:120px 0 40px;max-width:min(100% - 2*var(--gutter),1000px)}
 .stack__title{font-size:clamp(32px,4.4vw,66px);color:var(--c-paper);text-wrap:balance}
@@ -256,7 +246,6 @@ html[lang=en] .hero__title{font-size:clamp(38px,6.2vw,92px);max-width:14ch}
 .stack__card--sun{background:var(--c-sun);color:var(--c-brown)}
 .stack__card--gold{background:var(--c-gold-soft);color:var(--c-ink)}
 
-/* ---------- calculadora ---------- */
 .calc{padding:120px 0;background:var(--c-paper)}
 .calc__head{max-width:760px;margin:0 auto 48px;text-align:center}
 .calc__title{font-size:clamp(36px,5vw,72px);color:var(--c-forest)}
@@ -283,7 +272,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .calc__cta{width:100%}
 .calc__note{font-size:13.5px;color:var(--fg-muted);text-align:center}
 
-/* ---------- nosotras ---------- */
 .about{padding:120px 0;background:var(--c-mint-2)}
 .about__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);align-items:center}
 .about__photos{position:relative;height:clamp(420px,46vw,640px)}
@@ -302,7 +290,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .about__list li::before{content:"";position:absolute;left:0;top:.55em;width:14px;height:3px;border-radius:2px;background:var(--c-gold)}
 .about__hand{margin-top:34px;font-family:var(--f-hand);font-size:clamp(26px,2.4vw,36px);color:var(--c-moss);line-height:1.15}
 
-/* ---------- instagram ---------- */
 .ig{padding:120px 0;background:var(--bg-dark);color:var(--fg-on-dark)}
 .ig__head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:44px}
 .ig__title{font-size:clamp(32px,4.2vw,60px);color:var(--c-paper);max-width:18ch;text-wrap:balance}
@@ -316,7 +303,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .ig__cap{position:absolute;left:20px;right:20px;bottom:20px;z-index:1;font-family:var(--f-display);font-size:clamp(20px,1.6vw,26px);line-height:1.1}
 .ig__embed{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;z-index:2}
 
-/* ---------- preguntas ---------- */
 .faq{padding:120px 0;background:var(--c-paper)}
 .faq__grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,6vw,96px);align-items:start}
 .faq__intro{position:sticky;top:110px}
@@ -329,7 +315,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .qa[open] summary::after{transform:translateY(-30%) rotate(225deg)}
 .qa__a{padding:0 0 24px;max-width:54ch;color:var(--fg-muted)}
 
-/* ---------- contacto ---------- */
 .contact{position:relative;padding:120px 0 140px;background:var(--c-mint-2);overflow:hidden;isolation:isolate}
 .contact__line{z-index:0}
 .contact__grid{position:relative;z-index:1;display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,6vw,96px);align-items:start}
@@ -350,7 +335,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .form__error{color:#6e3b17;font-weight:500;text-align:center}
 .form .btn--xl{position:relative}
 
-/* ---------- pie ---------- */
 .footer{background:var(--d0);color:var(--fg-on-dark);padding:88px 0 120px}
 .footer__grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:48px;padding-bottom:56px;border-bottom:1px solid var(--hairline-dark)}
 .footer__brand img{border-radius:50%}
@@ -364,33 +348,26 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .footer__legal p:first-child{max-width:70ch}
 .footer__legal a{color:var(--c-paper);display:inline-block;padding:14px 2px;margin:-14px -2px}
 
-/* ---------- barra móvil ---------- */
 .mobilebar{display:none}
 
-/* ---------- revelado palabra a palabra (JS envuelve cada palabra) ---------- */
 .reveal .w{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.14em;margin-bottom:-.14em}
 .reveal .w>span{display:inline-block;transform:translateY(110%);will-change:transform}
 .reveal.is-in .w>span{transform:none;transition:transform var(--t-reveal) var(--ease-out-expo);transition-delay:var(--d,0s)}
 html.js .reveal-up{opacity:0;transform:translateY(40px)}
-.reveal-up.is-in{opacity:1;transform:none;transition:opacity var(--t-move) var(--ease-out-quint),transform var(--t-reveal) var(--ease-out-expo);transition-delay:var(--d,0s)}
+html.js .reveal-up.is-in{opacity:1;transform:none;transition:opacity var(--t-move) var(--ease-out-quint),transform var(--t-reveal) var(--ease-out-expo);transition-delay:var(--d,0s)}
 html.no-motion .reveal .w>span,html.no-motion .reveal-up{transform:none;opacity:1;transition:none}
 
-
-/* la voz «a mano» (antes Caveat): Fraunces blanda, peso 400, sin tercera familia (auditoría 2026-10-10) */
 .statement__label,.stack__cut,.stack__healed,.about__photo figcaption,.about__hand,.contact__where{font-weight:400;font-variation-settings:"opsz" 18,"SOFT" 100;letter-spacing:-.01em}
 .stack__cut,.stack__healed{font-size:clamp(24px,2.6vw,38px)}
 .about__hand{font-size:clamp(22px,2vw,30px)}
 .contact__where{font-size:24px}
 .statement__label{font-size:clamp(20px,1.9vw,26px)}
 .about__photo figcaption{font-size:20px}
-/* sin JS: las pestañas muestran todos sus paneles y las imágenes no se apilan */
+
 html:not(.js) .tabs__panel[hidden]{display:block;margin-top:28px}
 html:not(.js) .tabs__img{position:relative;opacity:1;transform:none;display:none}
 html:not(.js) .tabs__img.is-active{display:block}
 
-/* ---------- una vida en la misma mesa (escenario fijo; assets/vida.js sobre stage.js) ----------
-   Por defecto (sin JS, movimiento reducido): álbum apilado — cada foto con su leyenda y su tarjeta.
-   Con `html.vida-live`: un cuadro pegajoso, las fotos se funden, la luz cambia, el hilo avanza. */
 .vida{position:relative;background:var(--d1);color:var(--c-paper)}
 .vida__pin{display:grid;grid-template-columns:1fr;gap:0}
 .vida__ground,.vida__stage{display:contents}
@@ -424,13 +401,12 @@ html:not(.js) .tabs__img.is-active{display:block}
 .vida__photo--3{order:5}.vida__stage[data-k="3"]>*{order:6}
 .vida__photo--4{order:7}.vida__stage[data-k="4"]>*{order:8}
 
-/* en vivo */
 .vida-live .vida__pin{display:block;position:sticky;top:0;height:100dvh;overflow:clip;isolation:isolate}
 .vida-live .vida__ground{display:block;position:absolute;inset:0;transform-origin:50% 62%;will-change:transform;pointer-events:none}
 .vida-live .vida__photo{position:absolute;inset:0;opacity:0;visibility:hidden;will-change:opacity}
 .vida-live .vida__photo img{width:100%;height:100%;object-fit:cover;object-position:50% 56%}
 .vida-live .vida__photo::after{background:var(--tint,none),linear-gradient(180deg,rgba(29,20,13,0) 40%,rgba(29,20,13,.58) 100%)}
-/* la luz es el reloj: una luz fria que se va y una dorada que llega, movidas por transform (compositor) */
+
 .vida-live .vida__sun,.vida-live .vida__cool{display:block;position:absolute;left:-30vw;top:-30vh;width:160vw;height:160vh;pointer-events:none;will-change:transform,opacity;opacity:0}
 .vida-live .vida__sun{background:radial-gradient(closest-side,rgba(255,206,140,.42),rgba(255,180,100,.16) 38%,rgba(255,150,60,0) 70%);z-index:1}
 .vida-live .vida__cool{background:radial-gradient(closest-side,rgba(170,195,230,.45),rgba(150,175,215,.18) 40%,rgba(150,175,215,0) 70%);z-index:1}
@@ -493,7 +469,6 @@ html:not(.js) .tabs__img.is-active{display:block}
   .vida__film{display:none}
 }
 
-/* aseguradoras: los nombres sobre la madera de la mesa (recorte de E1) */
 .carriers{position:relative;isolation:isolate;background:var(--c-forest) url("assets/img/mesa-1920.webp") center 45%/cover no-repeat;border-bottom:0;padding:64px 0 56px}
 .carriers::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(29,20,13,.86),rgba(29,20,13,.84) 40%,rgba(29,20,13,.4) 62%,rgba(29,20,13,.62));pointer-events:none}
 .carriers>*{position:relative;z-index:1}
@@ -504,7 +479,6 @@ html:not(.js) .tabs__img.is-active{display:block}
 .marquee--carriers .marquee__track{align-items:center}
 .carriers__logos-note{margin:18px auto 0;text-align:center;font-size:13px;color:var(--fg-muted-dark);max-width:60ch}
 
-/* ---------- responsive: bandas 560 / 760 / 900 / 1100 ---------- */
 @media (max-width:1100px){
   .cards{grid-template-columns:repeat(2,1fr)}
   .card{min-height:380px}
@@ -533,6 +507,7 @@ html:not(.js) .tabs__img.is-active{display:block}
   .ig__grid{grid-template-columns:1fr 1fr}
 }
 @media (max-width:760px){
+  .hero__content>.eyebrow{padding-right:64px}
   .hero__pause{top:calc(var(--nav-h) + 14px);width:44px;height:44px;min-height:0;padding:0;font-size:0;display:grid;place-items:center}
   .hero__pause::before{content:"❚❚";font-size:12px;letter-spacing:.1em;color:var(--c-paper)}
   .hero__pause[aria-pressed="true"]::before{content:"▶";font-size:14px;letter-spacing:0}
@@ -577,8 +552,6 @@ html:not(.js) .tabs__img.is-active{display:block}
   .calc__amount{font-size:clamp(40px,12vw,56px)}
 }
 
-
-/* ---------- 2026-10-06: secciones de la versión final ---------- */
 .hero__small{margin-top:10px;font-size:14.5px;font-weight:600;letter-spacing:.03em;color:var(--c-gold-soft)}
 .trust{background:var(--c-cream);border-bottom:1px solid var(--hairline)}
 .trust__list{display:grid;grid-template-columns:repeat(4,1fr);padding:26px 0;margin-inline:auto}
@@ -649,7 +622,6 @@ html:not(.js) .tabs__img.is-active{display:block}
   .calc__grid{padding:12px}
 }
 
-/* ---------- movimiento reducido: congela loops, scrubs y revelados ---------- */
 @media (prefers-reduced-motion:reduce){
   .marquee__track{animation:none!important;transform:none!important}
   .reveal .w>span,.reveal-up{transform:none!important;opacity:1!important;transition:none!important}
