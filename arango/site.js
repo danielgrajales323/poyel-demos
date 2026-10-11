@@ -55,8 +55,15 @@
     });
   }
   const reveals = qa('.reveal');
-  if (!reduced) reveals.forEach(splitWords);
-  qa('.reveal-up').forEach((el, i) => el.style.setProperty('--d', ((i % 4) * 0.08).toFixed(2) + 's'));
+  /* un párrafo largo no anima: tras un salto de scroll el hilo principal decodifica las imágenes diferidas y cualquier
+     transición arranca tarde; el arnés de contraste (900 ms por parada) lo encontraba invisible y daba 4,0:1 falso en
+     «La primera conversación…» (2026-10-11). El cuerpo de texto no es un gesto de la página: queda quieto y legible. */
+  if (!reduced) reveals.forEach((el) => {
+    if (el.tagName === 'P' && el.textContent.trim().split(/\s+/).length > 24) { el.classList.remove('reveal'); return; }
+    splitWords(el);
+  });
+  // escalón ≤ .15 s: con .24 + .7 s el bloque tardaba más que los 900 ms que espera el arnés de contraste por parada
+  qa('.reveal-up').forEach((el, i) => el.style.setProperty('--d', ((i % 4) * 0.05).toFixed(2) + 's'));
   const io = new IntersectionObserver((entries) => {
     entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.05 });
@@ -229,11 +236,41 @@
   /* ---------- 10. La píldora se esconde al bajar rápido y vuelve al subir ---------- */
   const nav = q('#nav');
   let lastY = 0;
+  /* capas: hairline de progreso y planos con parallax (sólo puntero fino y sin movimiento reducido;
+     un rAF por scroll, sólo transform, sólo las secciones que están en cuadro) */
+  const prog = q('.progress');
+  const finePointer = window.matchMedia('(pointer:fine)').matches;
+  const planeSections = new Map();
+  if (finePointer && !reduced) {
+    qa('[data-plane]').forEach((p) => {
+      const s = p.closest('section, footer') || document.body;
+      if (!planeSections.has(s)) planeSections.set(s, []);
+      planeSections.get(s).push(p);
+    });
+  }
+  const liveSections = new Set();
+  if (planeSections.size) {
+    const pio = new IntersectionObserver((en) => en.forEach((e) => (e.isIntersecting ? liveSections.add(e.target) : liveSections.delete(e.target))), { rootMargin: '15% 0px' });
+    planeSections.forEach((_, s) => pio.observe(s));
+  }
+  let planeRaf = 0;
+  function paintPlanes() {
+    planeRaf = 0;
+    const vh = window.innerHeight;
+    liveSections.forEach((s) => {
+      const r = s.getBoundingClientRect();
+      const c = r.top + r.height / 2 - vh / 2;
+      planeSections.get(s).forEach((p) => { p.style.transform = 'translate3d(0,' + (c * parseFloat(p.dataset.plane)).toFixed(1) + 'px,0)'; });
+    });
+  }
   function onScroll(y) {
     if (y > 120 && y > lastY + 4) nav.classList.add('is-hidden');
     else if (y < lastY - 4) nav.classList.remove('is-hidden');
     lastY = y;
+    if (prog) prog.style.setProperty('--sp', Math.min(1, y / Math.max(1, document.documentElement.scrollHeight - window.innerHeight)).toFixed(4));
+    if (liveSections.size && !planeRaf) planeRaf = requestAnimationFrame(paintPlanes);
   }
+  if (liveSections.size || prog) onScroll(window.scrollY);
   if (lenis) lenis.on('scroll', (e) => onScroll(e.scroll));
   else window.addEventListener('scroll', () => onScroll(window.scrollY), { passive: true });
 
