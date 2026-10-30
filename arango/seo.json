@@ -1,0 +1,14 @@
+{
+  "base_url": "https://arangolegacy.com",
+  "modo": "publico",
+  "excluir": ["tools/**", "docs/**", "deploy-staging/**", ".audit-out/**"],
+  "no_indexables": ["404.html"],
+  "sin_minimo_de_texto": ["*privacy*", "*privacidad*", "*404*"],
+  "negocio": {
+    "nombre": "Arango Legacy Advisors",
+    "telefonos": ["+1 (781) 655-9014", "+1 (857) 472-4283"],
+    "pais": "US",
+    "paginas_con_rating": []
+  },
+  "politica_ia_obligatoria": true
+}

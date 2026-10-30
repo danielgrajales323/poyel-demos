@@ -169,6 +169,8 @@
       eq.deudas.textContent = usd(v.deudas + v.hipoteca);
       eq.mensual.textContent = usd(v.ingreso / 12);
       if (hidden && animate) hidden.value = usd(rounded);
+      const wa = q('[data-calc-wa]');
+      if (wa && animate) wa.href = 'https://wa.me/17816559014?text=' + encodeURIComponent(EN ? 'Hi, the calculator gave me ' + usd(rounded) + ' of estimated coverage. I would like my free consultation.' : 'Hola, la calculadora me dio ' + usd(rounded) + ' de cobertura estimada. Quiero mi asesoría gratuita.');
       if (animate && !compute.used) { compute.used = true; if (window.__track) window.__track('calc_used', 'calculadora'); }
       if (animate && hasGsap && !reduced) {
         const o = { n: shown };
@@ -212,10 +214,33 @@
       ]).filter(Boolean).join('\n');
       if (window.__track) window.__track('form_submit', 'contacto');
       window.open('https://wa.me/17816559014?text=' + encodeURIComponent(lines), '_blank', 'noopener');
+      const ok = q('[data-form-ok]', form); if (ok) { ok.hidden = false; ok.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
     });
   }
 
   /* ---------- 9. Reels: el póster abre el embed oficial de Instagram en su lugar ---------- */
+  // video propio (el de Nora): se reproduce en la misma tarjeta, con sonido, al tocar
+  qa('[data-video]').forEach((b) => {
+    if (window.matchMedia('(hover:hover) and (pointer:fine)').matches && !reduced) {
+      let pv = null;
+      b.addEventListener('mouseenter', () => {
+        if (q('video.ig__embed', b.parentElement)) return;
+        if (!pv) { pv = document.createElement('video'); pv.className = 'ig__preview'; pv.src = b.dataset.video; pv.muted = true; pv.loop = true; pv.playsInline = true; pv.preload = 'metadata'; pv.setAttribute('aria-hidden', 'true'); b.appendChild(pv); }
+        pv.currentTime = 0; pv.play().catch(() => {}); b.classList.add('is-previewing');
+      });
+      b.addEventListener('mouseleave', () => { if (pv) { pv.pause(); } b.classList.remove('is-previewing'); });
+    }
+    b.addEventListener('click', () => {
+      const wrap = b.parentElement;
+      if (q('video', wrap)) return;
+      const v = document.createElement('video');
+      v.className = 'ig__embed'; v.src = b.dataset.video; v.controls = true; v.playsInline = true; v.autoplay = true;
+      v.setAttribute('aria-label', b.getAttribute('aria-label') || '');
+      wrap.style.position = 'relative'; wrap.appendChild(v);
+      if (window.__track) window.__track('video_play', 'instagram');
+      v.play().catch(() => {});
+    });
+  });
   qa('[data-reel]').forEach((a) => {
     a.addEventListener('click', (e) => {
       if (e.metaKey || e.ctrlKey) return;
@@ -232,6 +257,41 @@
       wrap.appendChild(f);
     });
   });
+
+  /* ---------- 9b. Cursor: la A del logo ---------- */
+  const cur = q('.cursor');
+  if (cur && finePointerCursor()) {
+    let tx = -100, ty = -100, x = -100, y = -100, raf = 0;
+    const dark = qa('.hero, .statement, .stack, .ig, .footer, .carriers, .vida');
+    const paint = () => {
+      x += (tx - x) * 0.55; y += (ty - y) * 0.55;
+      cur.style.setProperty('--cx', x.toFixed(1) + 'px'); cur.style.setProperty('--cy', y.toFixed(1) + 'px');
+      if (Math.abs(tx - x) > 0.3 || Math.abs(ty - y) > 0.3) raf = requestAnimationFrame(paint); else raf = 0;
+    };
+    document.addEventListener('mousemove', (e) => {
+      tx = e.clientX; ty = e.clientY; cur.classList.add('is-on');
+      const t = e.target.closest ? e.target.closest('a, button, [role=button], summary, label, input[type=range]') : null;
+      cur.classList.toggle('is-link', !!t);
+      const onDark = dark.some((s) => { const r = s.getBoundingClientRect(); return e.clientY >= r.top && e.clientY <= r.bottom; });
+      cur.classList.toggle('is-light', onDark);
+      if (!raf) raf = requestAnimationFrame(paint);
+    }, { passive: true });
+    document.addEventListener('mousedown', () => cur.classList.add('is-down'));
+    document.addEventListener('mouseup', () => cur.classList.remove('is-down'));
+    document.addEventListener('mouseleave', () => cur.classList.remove('is-on'));
+    document.addEventListener('mouseenter', () => cur.classList.add('is-on'));
+  }
+  function finePointerCursor() { return window.matchMedia('(pointer:fine)').matches && !reduced; }
+
+  /* ---------- 9c. Enlace activo en el nav según la sección en pantalla ---------- */
+  const navLinks = qa('.nav__links a[href^="#"]');
+  if (navLinks.length && 'IntersectionObserver' in window) {
+    const byId = new Map(navLinks.map((a) => [a.getAttribute('href').slice(1), a]));
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { navLinks.forEach((a) => a.classList.remove('is-active')); const a = byId.get(en.target.id); if (a) a.classList.add('is-active'); } });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    byId.forEach((_, id) => { const s = document.getElementById(id); if (s) spy.observe(s); });
+  }
 
   /* ---------- 10. La píldora se esconde al bajar rápido y vuelve al subir ---------- */
   const nav = q('#nav');
